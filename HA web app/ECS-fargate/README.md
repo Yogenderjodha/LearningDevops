@@ -63,16 +63,6 @@ Response returned to user
 
 ---
 
-# 📸 VPC Overview
-
-![VPC](images/vpc-overview.png)
-
----
-
-# 📸 ECS Architecture
-
-![ECS Architecture](images/ecs-architecture.png)
-
 ---
 
 # 🏗 Infrastructure Components
@@ -110,9 +100,6 @@ Ensure the following resources already exist:
 
 ---
 
-# 📸 VPC Components
-
-![VPC Components](images/vpc-components.png)
 
 ---
 
@@ -222,10 +209,6 @@ docker images
 ```
 
 ---
-
-# 📸 Docker Build
-
-![Docker Build](images/docker-build.png)
 
 ---
 
@@ -341,9 +324,6 @@ Inbound Rule:
 
 ---
 
-# 📸 ECS Security Group
-
-![ECS SG](images/ecs-security-group.png)
 
 ---
 
@@ -422,11 +402,6 @@ Expected:
 
 ---
 
-# 📸 Running Tasks
-
-![Running Tasks](images/running-tasks.png)
-
----
 
 # 🟢 Step 14: Verify Target Health
 
@@ -439,11 +414,6 @@ Healthy
 
 ---
 
-# 📸 Target Health
-
-![Target Health](images/target-health.png)
-
----
 
 # 🟢 Step 15: Verify Application
 
