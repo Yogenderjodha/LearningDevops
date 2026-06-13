@@ -530,6 +530,76 @@ Fargate Tasks (Multi AZ)
 
 ---
 
+# 📸 Architecture Diagram
+
+```text
+
+                                ┌────────────────────────────┐
+                                │          Internet          │
+                                └─────────────┬──────────────┘
+                                              │
+                                              ▼
+                                ┌────────────────────────────┐
+                                │   Internet Gateway (IGW)   │
+                                └─────────────┬──────────────┘
+                                              │
+                                              ▼
+                   ┌────────────────────────────────────────────┐
+                   │     Application Load Balancer (ALB)        │
+                   │        Public Subnets (AZ-A, AZ-B)         │
+                   │  - Listens on HTTP :80                     │
+                   └───────────────┬────────────────────────────┘
+                                   │
+                                   ▼
+                   ┌────────────────────────────────────────────┐
+                   │              Target Group                  │
+                   │           (IP-based routing)               │
+                   │     Health Check: /health (HTTP 200)      │
+                   └───────────────┬────────────────────────────┘
+                                   │
+                                   ▼
+        ┌────────────────────────────────────────────────────────────┐
+        │                  ECS Service (Fargate)                     │
+        │        Desired Count: 2 (Auto Scaling Enabled)            │
+        │        Private Subnets (Multi-AZ: pri-1, pri-2)           │
+        └───────────────┬────────────────────────────┬──────────────┘
+                        │                            │
+                        ▼                            ▼
+        ┌──────────────────────────┐   ┌──────────────────────────┐
+        │  ECS Task (AZ-A)         │   │  ECS Task (AZ-B)         │
+        │  Flask Container         │   │  Flask Container         │
+        │  Port: 8080              │   │  Port: 8080              │
+        └──────────────┬───────────┘   └──────────────┬───────────┘
+                       │                              │
+                       └──────────────┬───────────────┘
+                                      ▼
+                        ┌──────────────────────────┐
+                        │   NAT Gateway (Outbound) │
+                        │  (for ECR / updates)     │
+                        └──────────────────────────┘
+
+
+──────────────────────────────────────────────────────────────────────
+                         ⚡ AUTO SCALING LAYER
+──────────────────────────────────────────────────────────────────────
+
+                    ECS Service Auto Scaling Policy
+
+        Metric: ECSServiceAverageCPUUtilization
+        Target: 70%
+
+        ┌──────────────────────────────────────────────┐
+        │ CPU > 70%  → Scale OUT (Add new tasks)      │
+        │ CPU < 70%  → Scale IN (Remove tasks)        │
+        └──────────────────────────────────────────────┘
+
+        Cooldowns:
+        - Scale Out: 120s
+        - Scale In : 120s
+        - Status   : ACTIVE
+```
+
+
 # 🚀 Future Enhancements
 
 * HTTPS via ACM
